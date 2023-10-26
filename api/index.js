@@ -27,6 +27,7 @@ app.use((err, req, res, next) => {
   return res.status(statusCode).json({ success: false, statusCode, message });
 });
 
+
 app.listen(3000, () => {
   console.log(`Server listening on port: 3000`);
 });
