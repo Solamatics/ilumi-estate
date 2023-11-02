@@ -9,6 +9,8 @@ const SignUp = () => {
 
   const navigate = useNavigate();
 
+
+
   //hamdle input change
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value });
