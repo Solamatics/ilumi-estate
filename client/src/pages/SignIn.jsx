@@ -1,13 +1,20 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  signInStart,
+  signInSuccess,
+  signInFailure,
+} from "../redux/user/userSlice";
 
 const SignIn = () => {
   const [formData, setFormData] = useState({});
-  const [error, setError] = useState(null);
-  const [loading, setLoading] = useState(false);
+
+  const { loading, error } = useSelector((state) => state.user);
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   //hamdle input change
   const handleChange = (e) => {
@@ -17,23 +24,19 @@ const SignIn = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      setLoading(true);
+      dispatch(signInStart());
       const response = await axios.post("/api/auth/signin", formData);
       const data = response.data;
-      
-      if (data.sucess === false) {
-        console.log(data);
-        setLoading(false);
-        setError(data.response.data.message);
+      console.log(data.rest)
+
+      if (data.success === false) {
+        dispatch(signInFailure(data.response.data.message));
         return;
       }
-      setLoading(false);
-      setError(null);
+      dispatch(signInSuccess(data.rest));
       navigate("/");
     } catch (error) {
-      console.log(error)
-      setLoading(false);
-      setError(error.response.data.message);
+      dispatch(signInFailure(error?.response?.data?.message));
     }
   };
 
