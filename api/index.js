@@ -1,7 +1,7 @@
 import express from "express";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
-import cors from "cors"
+import cors from "cors";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 dotenv.config();
@@ -30,7 +30,6 @@ app.use((err, req, res, next) => {
   return res.status(statusCode).json({ success: false, statusCode, message });
 });
 
-
-app.listen(3000, () => {
-  console.log(`Server listening on port: 3000`);
+app.listen(4000, () => {
+  console.log(`Server listening on port: 4000`);
 });
