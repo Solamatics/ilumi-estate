@@ -4,18 +4,18 @@ import { app } from "../firebase";
 import axios from "axios";
 import { signInSuccess } from "../redux/user/userSlice";
 import { useDispatch } from "react-redux";
-import {useNavigate} from "react-router-dom"
+import { useNavigate } from "react-router-dom";
 
 const OAuth = () => {
   const dispatch = useDispatch();
 
   const URL = import.meta.env.VITE_BASE_URL;
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleGoogleClick = async () => {
+    const provider = new GoogleAuthProvider();
     try {
-      const provider = new GoogleAuthProvider();
       const auth = getAuth(app);
       const result = await signInWithPopup(auth, provider);
 
@@ -27,7 +27,7 @@ const OAuth = () => {
 
       const data = response.data;
       dispatch(signInSuccess(data));
-      navigate('/')
+      navigate("/");
     } catch (error) {
       console.log("Could not sign in with google", error);
     }

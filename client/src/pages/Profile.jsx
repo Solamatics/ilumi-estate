@@ -1,17 +1,88 @@
 import { useSelector } from "react-redux";
+import { useRef, useState, useEffect } from "react";
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from "firebase/storage";
+import { app } from "../firebase";
 
 const Profile = () => {
   const { currentUser } = useSelector((state) => state.user);
+  const fileRef = useRef();
+
+  const [file, setFile] = useState(undefined);
+  const [filePerc, setFilePerc] = useState(0);
+  const [fileUploadError, setUploadFileError] = useState(false);
+  const [formData, setFormData] = useState({});
+
+  useEffect(() => {
+    if (file) {
+      handleUpload(file);
+    }
+  }, [file]);
+
+  const handleUpload = (file) => {
+    const storage = getStorage(app);
+    //create unique name for each file uploads.
+    //the data function helps to ensure that if an image is uploaded more than once, the name remains unique
+    const fileName = new Date().getTime() + file.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+        setFilePerc(Math.round(progress));
+      },
+      (error) => {
+        setUploadFileError(true);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) =>
+          setFormData((prevData) => ({ ...prevData, avatar: downloadURL })),
+        );
+      },
+    );
+  };
 
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
       <form className="flex flex-col gap-4">
+        <input
+          type="file"
+          ref={fileRef}
+          onChange={(e) => {
+            setFile(e.target.files[0]);
+          }}
+          hidden
+          accept="image/*"
+        />
         <img
-          src={currentUser?.rest?.avatar}
+          onClick={() => fileRef.current.click()}
+          src={formData?.avatar || currentUser?.rest?.avatar}
           alt="profile"
           className="my-2 rounded-full h-24 w-24 object-cover cursor-pointer self-center"
         />
+        <p className="text-sm self-center">
+          {fileUploadError ? (
+            <span className="text-red-700">
+              Error during image uploade (image size must not exceed 2mb)
+            </span>
+          ) : filePerc > 0 && filePerc < 100 ? (
+            <span className="text-slate-700">{`Uploading ${filePerc}%`}</span>
+          ) : filePerc === 100 ? (
+            <span className="text-green-700">
+              Image Successfully uploaded!
+            </span>
+          ) : (
+            ""
+          )}
+        </p>
         <input
           type="text"
           placeholder="username"
@@ -36,10 +107,13 @@ const Profile = () => {
       </form>
 
       <div className="flex items-center justify-between mt-4">
-        <span className="text-red-700 font-semibold cursor-pointer">Delete Account</span>
-        <span className="text-red-700 font-semibold cursor-pointer">Sign out</span>
+        <span className="text-red-500 font-semibold cursor-pointer">
+          Delete Account
+        </span>
+        <span className="text-red-500 font-semibold cursor-pointer">
+          Sign out
+        </span>
       </div>
-
     </div>
   );
 };
