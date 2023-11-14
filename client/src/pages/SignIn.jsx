@@ -12,7 +12,7 @@ import OAuth from "../components/OAuth";
 const SignIn = () => {
   const [formData, setFormData] = useState({});
 
-  const URL = "http://localhost:4000";
+  const URL = import.meta.env.VITE_BASE_URL;
 
   const { loading, error } = useSelector((state) => state.user);
 
@@ -35,7 +35,7 @@ const SignIn = () => {
         dispatch(signInFailure(data.response.data.message));
         return;
       }
-      dispatch(signInSuccess(data.rest));
+      dispatch(signInSuccess(data));
       navigate("/");
     } catch (error) {
       dispatch(signInFailure(error?.response?.data?.message));

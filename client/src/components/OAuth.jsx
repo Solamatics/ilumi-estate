@@ -9,7 +9,7 @@ import {useNavigate} from "react-router-dom"
 const OAuth = () => {
   const dispatch = useDispatch();
 
-  const URL = "http://localhost:4000";
+  const URL = import.meta.env.VITE_BASE_URL;
 
   const navigate = useNavigate()
 
@@ -39,7 +39,7 @@ const OAuth = () => {
       onClick={handleGoogleClick}
       className="bg-red-500 uppercase rounded-lg p-3 text-white hover:opacity-95"
     >
-      Continu with Google
+      Continue with Google
     </button>
   );
 };
