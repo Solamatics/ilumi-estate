@@ -1,6 +1,7 @@
 import { FaSearch } from "react-icons/fa";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
+import { IoPersonSharp } from "react-icons/io5";
 
 const Header = () => {
   const authenticated = false;

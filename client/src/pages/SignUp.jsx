@@ -20,7 +20,7 @@ const SignUp = () => {
 
   //hamdle input change
   const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.id]: e.target.value });
+    setFormData((prevData) => ({ ...prevData, [e.target.id]: e.target.value }));
   };
 
   const handleSubmit = async (e) => {
