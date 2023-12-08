@@ -14,7 +14,10 @@ import {
   updateProfileFailure,
   deleteUserStart,
   deleteUserSuccess,
-  deleteUserFailure
+  deleteUserFailure,
+  signOutStart,
+  signOutSuccess,
+  signOutFailure,
 } from "../redux/user/userSlice";
 
 const URL = import.meta.env.VITE_BASE_URL;
@@ -106,8 +109,8 @@ const Profile = () => {
 
   //handleDeleteProfile
   const handleDelete = async () => {
-    try{
-      dispatch(deleteUserStart())
+    try {
+      dispatch(deleteUserStart());
       const response = await axios.delete(
         `${URL}/api/user/delete/${currentUser?._id}`,
       );
@@ -116,9 +119,24 @@ const Profile = () => {
         dispatch(deleteUserFailure(data.response.data.message));
         return;
       }
-      dispatch(deleteUserSuccess(data))
-    }catch(err){
-      dispatch(deleteUserFailure(ata.response.data.message))
+      dispatch(deleteUserSuccess(data));
+    } catch (err) {
+      dispatch(deleteUserFailure(ata.response.data.message));
+    }
+  };
+
+  //handleSignOut
+  const handleSignOut = async () => {
+    try {
+      dispatch(signOutStart());
+      const response = await axios.get(`${URL}/api/auth/signout`);
+      const data = response.data;
+      if (data.success === false) {
+        dispatch(signOutFailure(data.response.data.message));
+      }
+      dispatch(signOutSuccess(data));
+    } catch (err) {
+      console.log(err);
     }
   };
 
@@ -191,7 +209,10 @@ const Profile = () => {
         >
           Delete Account
         </span>
-        <span className="text-red-500 font-semibold cursor-pointer">
+        <span
+          className="text-red-500 font-semibold cursor-pointer"
+          onClick={handleSignOut}
+        >
           Sign out
         </span>
       </div>
