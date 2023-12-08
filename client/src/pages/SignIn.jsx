@@ -24,19 +24,54 @@ const SignIn = () => {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
+  // const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   try {
+  //     dispatch(signInStart());
+  //     const response = await axios.post(`${URL}/api/auth/signin`, formData);
+  //     const data = response.data;
+
+  //     if (data.success === false) {
+  //       dispatch(signInFailure(data.response.data.message));
+  //       return;
+  //     }
+  //     dispatch(signInSuccess(data));
+  //     navigate("/");
+  //   } catch (error) {
+  //     dispatch(signInFailure(error?.response?.data?.message));
+  //   }
+  // };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       dispatch(signInStart());
-      const response = await axios.post(`${URL}/api/auth/signin`, formData);
+      const response = await axios.post(`${URL}/api/auth/signin`, formData, {
+        headers: {
+          "Content-Type": "application/json",
+          // Add the Authorization header with the token
+          Authorization: `Bearer ${localStorage.getItem("access_token")}`,
+        },
+      });
       const data = response.data;
 
-      if (data.success === false) {
-        dispatch(signInFailure(data.response.data.message));
-        return;
+      console.log("data :", data);
+
+      if (data.access_token) {
+        // Store the token securely on the client side (e.g., in local storage)
+        localStorage.setItem("access_token", data.access_token);
+
+        // Set the token in the Authorization header for future requests
+        axios.defaults.headers.common[
+          "Authorization"
+        ] = `Bearer ${data.access_token}`;
+
+        // Dispatch success action or update the state as needed
+        dispatch(signInSuccess(data.user));
+        navigate("/");
+      } else {
+        dispatch(signInFailure(data.message));
       }
-      dispatch(signInSuccess(data));
-      navigate("/");
     } catch (error) {
       dispatch(signInFailure(error?.response?.data?.message));
     }

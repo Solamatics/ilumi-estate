@@ -5,13 +5,12 @@ import cors from "cors";
 import userRouter from "./routes/user.route.js";
 import authRouter from "./routes/auth.route.js";
 import cookieParser from "cookie-parser";
+
 dotenv.config();
 const app = express();
-
-app.use(cors());
-
-app.use(express.json());
 app.use(cookieParser());
+app.use(express.json());
+app.use(cors());
 
 mongoose
   .connect(process.env.MONGO_URI)

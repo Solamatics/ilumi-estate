@@ -7,6 +7,7 @@ const Header = () => {
   const authenticated = false;
 
   const { currentUser } = useSelector((state) => state.user);
+  console.log("currentUser :", currentUser)
 
   return (
     <header className="bg-slate-200 shadow-md">
@@ -37,7 +38,7 @@ const Header = () => {
           >
             {currentUser ? (
               <img
-                src={currentUser?.rest?.avatar}
+                src={currentUser?.avatar}
                 alt=""
                 className="h-8 w-8 rounded-full object-cover"
               />
