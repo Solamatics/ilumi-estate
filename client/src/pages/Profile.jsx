@@ -92,7 +92,7 @@ const Profile = () => {
       );
 
       const data = response.data;
-      console.log("data", response);
+      console.log("data", data.username);
 
       if (data.success === false) {
         dispatch(updateProfileFailure(data.response.data.message));
