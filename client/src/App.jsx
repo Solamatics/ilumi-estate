@@ -5,7 +5,8 @@ import Profile from "./pages/Profile";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
 import Header from "./components/Header";
-import Errorpage from "./pages/errorpage";
+import Errorpage from "./pages/Errorpage";
+import CreateListing from "./pages/CreateListing";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
         <Route path="*" element={<Errorpage />} />
         <Route element={<PrivateRoute />}>
           <Route path="/profile" element={<Profile />} />
+          <Route path="/create-listing" element={<CreateListing />} />
         </Route>
       </Routes>
     </BrowserRouter>

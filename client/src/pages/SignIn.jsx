@@ -24,24 +24,6 @@ const SignIn = () => {
     setFormData((prev) => ({ ...prev, [e.target.id]: e.target.value }));
   };
 
-  // const handleSubmit = async (e) => {
-  //   e.preventDefault();
-  //   try {
-  //     dispatch(signInStart());
-  //     const response = await axios.post(`${URL}/api/auth/signin`, formData);
-  //     const data = response.data;
-
-  //     if (data.success === false) {
-  //       dispatch(signInFailure(data.response.data.message));
-  //       return;
-  //     }
-  //     dispatch(signInSuccess(data));
-  //     navigate("/");
-  //   } catch (error) {
-  //     dispatch(signInFailure(error?.response?.data?.message));
-  //   }
-  // };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
