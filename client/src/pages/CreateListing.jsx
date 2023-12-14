@@ -13,7 +13,7 @@ import { useNavigate } from "react-router-dom";
 const CreateListing = () => {
   const [files, setFiles] = useState([]);
   const [formData, setFormData] = useState({
-    imgUrls: [],
+    imageUrls: [],
     name: "",
     description: "",
     address: "",
@@ -38,7 +38,7 @@ const CreateListing = () => {
 
   const handleImageSubmit = (e) => {
     e.preventDefault();
-    if (files.length > 0 && files.length + formData.imgUrls.length < 7) {
+    if (files.length > 0 && files.length + formData.imageUrls.length < 7) {
       setUploading(true);
       setImageUploadError(false);
       const promises = [];
@@ -50,7 +50,7 @@ const CreateListing = () => {
         .then((urls) => {
           setFormData((prev) => ({
             ...prev,
-            imgUrls: prev.imgUrls.concat(urls),
+            imageUrls: prev.imageUrls.concat(urls),
           }));
           setImageUploadError(false);
           setUploading(false);
@@ -100,7 +100,7 @@ const CreateListing = () => {
   const handleImageDelete = (index) => {
     setFormData((prev) => ({
       ...prev,
-      imgUrls: prev.imgUrls.filter((_, i) => i !== index),
+      imageUrls: prev.imageUrls.filter((_, i) => i !== index),
     }));
   };
 
@@ -138,7 +138,7 @@ const CreateListing = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      if (formData.imgUrls.length < 1)
+      if (formData.imageUrls.length < 1)
         return setError("You must upload at least one image");
       if (+formData.regularPrice < +formData.discountPrice)
         return setError("Discount price must be lower than regular price");
@@ -366,8 +366,8 @@ const CreateListing = () => {
           <p className="text-red-500 text-sm">
             {imageUploadError ? imageUploadError : null}
           </p>
-          {formData.imgUrls.length > 0
-            ? formData.imgUrls.map((url, index) => (
+          {formData.imageUrls.length > 0
+            ? formData.imageUrls.map((url, index) => (
                 <div
                   key={url}
                   className="flex justify-between items-center p-3 border"

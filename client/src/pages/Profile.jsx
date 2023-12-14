@@ -19,7 +19,7 @@ import {
   signOutSuccess,
   signOutFailure,
 } from "../redux/user/userSlice";
-import {Link} from "react-router-dom"
+import { Link } from "react-router-dom";
 
 const URL = import.meta.env.VITE_BASE_URL;
 
@@ -32,6 +32,8 @@ const Profile = () => {
   const [fileUploadError, setUploadFileError] = useState(false);
   const [formData, setFormData] = useState({});
   const [updateSuccess, setUpdateSuccess] = useState(false);
+  const [showListingsError, setShowListingsError] = useState(false);
+  const [listings, setListings] = useState([]);
 
   const dispatch = useDispatch();
 
@@ -141,6 +143,25 @@ const Profile = () => {
     }
   };
 
+  //show lisitng
+  const handleShowListing = async () => {
+    try {
+      setShowListingsError(false);
+      const response = await axios.get(
+        `${URL}/api/user/listings/${currentUser?._id}`,
+      );
+      const data = response.data;
+      console.log("data :", data);
+      if (data.success === false) {
+        setShowListingsError(true);
+      }
+      setListings(data);
+    } catch (error) {
+      setShowListingsError(true);
+      return;
+    }
+  };
+
   return (
     <div className="p-3 max-w-lg mx-auto">
       <h1 className="text-3xl font-semibold text-center my-7">Profile</h1>
@@ -201,8 +222,11 @@ const Profile = () => {
         <button className="bg-slate-700 disabled={laoding} text-white rounded-lg p-3 uppercase hover:opacity-95 disabled:opacity-80">
           {loading ? "Loading" : "Update"}
         </button>
-        <Link className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95" to={"/create-listing"}>
-          Create Listing 
+        <Link
+          className="bg-green-700 text-white p-3 rounded-lg uppercase text-center hover:opacity-95"
+          to={"/create-listing"}
+        >
+          Create Listing
         </Link>
       </form>
 
@@ -224,6 +248,45 @@ const Profile = () => {
         {updateSuccess ? "User updated successfully" : null}
       </p>
       <p className="text-red-800 text-center">{error ? error : ""}</p>
+      <button className="text-green-700 w-full" onClick={handleShowListing}>
+        Show Listings
+      </button>
+      <p className="text-red-700 mt-5">
+        {showListingsError ? "Error showing listings" : ""}
+      </p>
+      {listings && listings.length > 0 ? (
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center mt-7 text-normal font-semibold">
+            Your Listing
+          </h1>
+          {listings?.map((listing) => (
+            <div
+              key={listing?._id}
+              className="flex items-center justify-between gap-4 border rounded-lg p-3"
+            >
+              <Link to={`listing/${listing?._id}`}>
+                <img
+                  src={listing?.imageUrls[0]}
+                  alt="listing cover"
+                  className="w-16 h-16 object-contain"
+                />
+              </Link>
+              <Link
+                to={`listing/${listing?._id}`}
+                className="flex-1 text-slate-700 text-sm font-semibold hover:underline truncate"
+              >
+                <p>{listing.name}</p>
+              </Link>
+              <div className="flex flex-col">
+                <button className="text-red-700 uppercase">Delete</button>
+                <button className="text-green-700 uppercase">Edit</button>
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
+        ""
+      )}
     </div>
   );
 };
