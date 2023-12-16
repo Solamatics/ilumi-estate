@@ -165,18 +165,18 @@ const Profile = () => {
   //delete listing
   const handleDeleteListing = async (id) => {
     try {
-      const response = await axios.delete(`${URL}/api/listing/delete/${id}`)
-      const data = response.data
+      const response = await axios.delete(`${URL}/api/listing/delete/${id}`);
+      const data = response.data;
 
-     if (data.success === false) {
-       console.log(data.message);
-       return;
-     }
-     setListings((prev) => prev.filter((listing) => listing._id !== id))
-    } catch(error) {
-      console.log(error)
+      if (data.success === false) {
+        console.log(data.message);
+        return;
+      }
+      setListings((prev) => prev.filter((listing) => listing._id !== id));
+    } catch (error) {
+      console.log(error);
     }
-  }
+  };
 
   return (
     <div className="p-3 max-w-lg mx-auto">
@@ -300,7 +300,11 @@ const Profile = () => {
                 >
                   Delete
                 </button>
-                <button className="text-green-700 uppercase">Edit</button>
+                <Link to={`/update-listing/${listing?._id}`}>
+                  <button type="button" className="text-green-700 uppercase">
+                    Edit
+                  </button>
+                </Link>
               </div>
             </div>
           ))}
