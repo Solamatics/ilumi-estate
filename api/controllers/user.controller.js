@@ -84,18 +84,32 @@ export const deleteUser = async (req, res, next) => {
   }
 };
 
-
 //get user listing
 export const getUserListings = async (req, res, next) => {
-  
-  if(req.user.userId === req.params.id) {
-    try{
-      const listings = await Listing.find({ userRef: req.params.id })
-      res.status(200).json(listings)
-    }catch(err) {
-      next(err)
+  if (req.user.userId === req.params.id) {
+    try {
+      const listings = await Listing.find({ userRef: req.params.id });
+      res.status(200).json(listings);
+    } catch (err) {
+      next(err);
     }
-  }else {
-    return next(errorHandler(401, 'You can only view your own listing'))
+  } else {
+    return next(errorHandler(401, "You can only view your own listing"));
   }
-}
+};
+
+//get user listing
+export const getCurrentUser = async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    if (!user) {
+      return next(errorHandler(404, "User not found"));
+    }
+
+    const { password: pass, ...rest } = user._doc;
+    res.status(200).json(rest);
+  } catch (error) {
+    next(error);
+  }
+};
