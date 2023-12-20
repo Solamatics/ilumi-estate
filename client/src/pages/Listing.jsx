@@ -28,6 +28,7 @@ const Listing = () => {
   const [contact, setContact] = useState(false);
 
   const { currentUser } = useSelector((state) => state.user);
+  console.log("currentUser :", currentUser);
   const params = useParams();
   const lisitngId = params.id;
 
@@ -36,6 +37,7 @@ const Listing = () => {
       setLoading(true);
       const response = await axios.get(`${URL}/api/listing/get/${lisitngId}`);
       const data = response.data;
+      console.log("DATA :", data);
       setLoading(false);
       if (data.success === false) {
         console.log(data.message);
@@ -114,7 +116,7 @@ const Listing = () => {
               </p>
             )}
           </div>
-          <p className="text-slate-800">
+          <p className="text-slate-800 text-justify">
             <span className="font-semibold text-black">Description - </span>
             {listing?.description}
           </p>
