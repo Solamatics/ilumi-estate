@@ -125,30 +125,21 @@ const UpdateListing = () => {
 
   //handle input change
   const handleChange = (e) => {
-    if (e.target.id === "sale" || e.target.id === "rent") {
-      setFormData((prev) => ({ ...prev, type: e.target.id }));
+    const { id, checked, type } = e.target;
+    if (id === "sale" || id === "rent") {
+      setFormData((prev) => ({ ...prev, type: id }));
     }
 
-    if (
-      e.target.id === "parking" ||
-      e.target.id === "furnished" ||
-      e.target.id === "offer"
-    ) {
-      setFormData((prev) => ({ ...prev, [e.target.id]: e.target.checked }));
+    if (id === "parking" || id === "furnished" || id === "offer") {
+      setFormData((prev) => ({ ...prev, [id]: checked }));
     }
 
-    if (
-      e.target.type === "number" ||
-      e.target.type === "text" ||
-      e.target.type === "textarea"
-    ) {
+    if (type === "number" || type === "text" || type === "textarea") {
       const value =
-        e.target.type === "number"
-          ? parseInt(e.target.value, 10)
-          : e.target.value;
+        type === "number" ? parseInt(e.target.value, 10) : e.target.value;
 
-      if (e.target.id !== undefined && value !== undefined) {
-        setFormData((prev) => ({ ...prev, [e.target.id]: value }));
+      if (id !== undefined && value !== undefined) {
+        setFormData((prev) => ({ ...prev, [id]: value }));
       }
     }
   };
