@@ -21,9 +21,9 @@ const SearchPage = () => {
     sort: "createdAt",
     order: "desc",
   });
-
   const [loading, setLoading] = useState(false);
   const [listings, setListings] = useState([]);
+  const [showMore, setShowMore] = useState(false);
 
   const navigate = useNavigate();
 
@@ -88,10 +88,15 @@ const SearchPage = () => {
   const fetchListings = async () => {
     const urlParams = new URLSearchParams(location.search);
     setLoading(true);
+    setShowMore(false);
     const searchQuery = urlParams.toString();
     const response = await axios.get(`${URL}/api/listing/get?${searchQuery}`);
     const data = response.data;
-    console.log(data);
+    if (data.length > 8) {
+      setShowMore(true);
+    } else {
+      setShowMore(false);
+    }
     setListings(data);
     setLoading(false);
   };
@@ -129,7 +134,19 @@ const SearchPage = () => {
     fetchListings();
   }, [location.search]);
 
-  console.log("listingss :", listings);
+  const handleShowMore = async () => {
+    const numberOfListings = listings.length;
+    const startIndex = numberOfListings;
+    const urlParams = new URLSearchParams(location.search);
+    urlParams.set("startIndex", startIndex);
+    const searchQuery = urlParams.toString();
+    const response = await axios.get(`${URL}/api/listing/get?${searchQuery}`);
+    const data = response.data;
+    if (data.length < 9) {
+      setShowMore(false);
+    }
+    setListings([...listings, ...data]);
+  };
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -234,6 +251,14 @@ const SearchPage = () => {
             listings.map((listing) => (
               <ListingCard key={listing._id} listing={listing} />
             ))}
+          {showMore ? (
+            <button
+              className="text-green-700 text-center w-full"
+              onClick={() => handleShowMore()}
+            >
+              Show more
+            </button>
+          ) : null}
         </div>
       </div>
     </div>
