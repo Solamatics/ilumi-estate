@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import ListingCard from "../components/ListingCard";
 
 const Checkbox = ({ id, label, onChange, checked }) => (
   <div className="flex gap-2">
@@ -90,6 +91,7 @@ const SearchPage = () => {
     const searchQuery = urlParams.toString();
     const response = await axios.get(`${URL}/api/listing/get?${searchQuery}`);
     const data = response.data;
+    console.log(data);
     setListings(data);
     setLoading(false);
   };
@@ -126,6 +128,8 @@ const SearchPage = () => {
 
     fetchListings();
   }, [location.search]);
+
+  console.log("listingss :", listings);
 
   return (
     <div className="flex flex-col md:flex-row">
@@ -215,6 +219,22 @@ const SearchPage = () => {
         <h1 className="mt-5 text-3xl font-semibold border-b p-3 text-slate-700">
           Listing results:
         </h1>
+        <div className="p-7 flex flex-wrap gap-4">
+          {listings.length === 0 && (
+            <p className="text-lg text-center text-slate-700">
+              No listing found!
+            </p>
+          )}
+          {loading && (
+            <p className="text-xl text-slate-700 text-center w-full">
+              Loading...
+            </p>
+          )}
+          {listings.length > 0 &&
+            listings.map((listing) => (
+              <ListingCard key={listing._id} listing={listing} />
+            ))}
+        </div>
       </div>
     </div>
   );
