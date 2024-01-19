@@ -10,7 +10,7 @@ import {
 // import OAuth from "../components/OAuth";
 
 const SignUp = () => {
-  const [formData, setFormData] = useState({});
+  const [formData, setFormData] = useState(null);
   const { loading, error } = useSelector((state) => state.user);
 
   const dispatch = useDispatch();
@@ -20,7 +20,9 @@ const SignUp = () => {
 
   //hamdle input change
   const handleChange = (e) => {
-    setFormData((prevData) => ({ ...prevData, [e.target.id]: e.target.value }));
+    const { id, value } = e.target;
+    console.log({ id, value });
+    setFormData((prevData) => ({ ...prevData, [id]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -29,7 +31,8 @@ const SignUp = () => {
       dispatch(signInStart());
       const response = await axios.post(`${URL}/api/auth/signup`, formData);
       const data = response.data;
-      if (data.sucess === false) {
+      console.log("logged data :", data);
+      if (data.success === false) {
         dispatch(signInFailure(error?.response?.data?.message));
         return;
       }
